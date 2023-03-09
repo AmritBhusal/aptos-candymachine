@@ -5,9 +5,28 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { AptosClient } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState, useEffect } from "react";
+import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
+import { u64 } from "@saberhq/token-utils";
+import invariant from 'tiny-invariant';
+import keccak256 from "keccak256";
+import MerkleTree from "merkletreejs";
 
 const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 const client = new AptosClient(NODE_URL);
+const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+
+const notwhitelist = new AptosAccount()
+
+const to_buf = (account:Uint8Array,amount:number): Buffer=>{ 
+  return Buffer.concat([
+    account,
+    new u64(amount).toArrayLike(Buffer, "le", 8),
+  ]);
+}
+
+console.log("Alice Address: "+alice.address())
+console.log("Bob Address: "+bob.address())
 
 const moduleAddress = "0xa1e3aa355555eb0b94cb3de6c98c1a5dd33c45a3647b3b5697c21d4719339b2e";
 
@@ -17,6 +36,16 @@ type Task = {
   content: string;
   task_id: string;
 };
+
+function makeid(length: number) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 function App() {
   const { account, signAndSubmitTransaction } = useWallet();
@@ -67,6 +96,7 @@ function App() {
     console.log("Hello");
 
   };
+  
  
   const addNew = async () => {
     if (!account) return [];
@@ -75,8 +105,26 @@ function App() {
       type: "entry_function_payload",
       function: `${moduleAddress}::candymachine::init_candy`,
       type_arguments: [],
-      arguments: [],
+      arguments: [
+        "Mokshya", // collection name
+        "This is the description of test collection", // collection description
+        "https://mokshya.io/nft/",  // collection 
+        alice.address(),
+        "1000",
+        "42",
+        1000,
+        10000,
+        "1000",
+        "2000",
+        "100",
+        [false,false,false],
+        [false,false,false,false,false],
+        0,
+        ""+makeid(5),
+    ]
+    
     };
+
     try {
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
@@ -89,8 +137,7 @@ function App() {
       setTransactionInProgress(false);
     }
   };
-
-  const onTaskAdded = async () => {
+    const onTaskAdded = async () => {
     // check for connected account
     if (!account) return;
     setTransactionInProgress(true);

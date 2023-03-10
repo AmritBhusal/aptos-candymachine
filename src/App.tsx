@@ -5,7 +5,7 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { AptosClient } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState, useEffect } from "react";
-// import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
+import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
 // import { u64 } from "@saberhq/token-utils";
 // import invariant from 'tiny-invariant';
 // import keccak256 from "keccak256";
@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 
 const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 const client = new AptosClient(NODE_URL);
-// const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 // const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 
 // const notwhitelist = new AptosAccount()
@@ -25,7 +25,7 @@ const client = new AptosClient(NODE_URL);
 //   ]);
 // }
 
-// console.log("Alice Address: "+alice.address())
+console.log("Alice Address: "+alice.address())
 // console.log("Bob Address: "+bob.address())
 
 const moduleAddress = "0x9200aa2d63d80f481447dde94f9fcc55908fd58ac4db510e6fab37b3cec8ded2";
@@ -107,17 +107,17 @@ function App() {
       type_arguments: [],
       arguments: [
         moduleAddress,
-        "my_nft_collection",
+        "Mokshya",
         "My NFT Collection",
-        "https://my-nft-collection.com/",
-        "account_address_of_royalty_payee",
-        100,
-        10,
+        "https://mokshya.io/nft/",
+        alice.address(),
+        "1000",
+        "42",
         1644782400, 
         1644969600,
-        100000000, 
-        200000000, 
-        10000, 
+        "1000",
+        "2000",
+        "100",
         [true, false, false],
         [true,true, true, true, true ],
         100,

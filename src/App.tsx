@@ -28,7 +28,7 @@ const alice = new AptosAccount(HexString.ensure("0x11111111111111111111111111111
 console.log("Alice Address: "+alice.address())
 // console.log("Bob Address: "+bob.address())
 
-const moduleAddress = "0x9200aa2d63d80f481447dde94f9fcc55908fd58ac4db510e6fab37b3cec8ded2";
+const moduleAddress = "0xb9c7b4d7da344bbf03a3d4b144c2020dec1049427b96d0411024153485621185";
 
 type Task = {
   address: string;
@@ -69,7 +69,7 @@ function App() {
     try {
       const CandyMachineResource = await client.getAccountResource(
         account.address,
-        `${moduleAddress}:candymachine::CandyMachine`
+        moduleAddress+":candymachine::CandyMachine"
         
       );
       setAccountHasList(true);
@@ -81,7 +81,7 @@ function App() {
       while (counter <= taskCounter) {
         const tableItem = {
           key_type: "u64",
-          value_type: `${moduleAddress}::candymachine::Task`,
+          value_type: moduleAddress+"::candymachine::Task",
           key: `${counter}`,
         };
         const task = await client.getTableItem(tableHandle, tableItem);
@@ -103,10 +103,9 @@ function App() {
     setTransactionInProgress(true);
     const payload = {
       type: "entry_function_payload",
-      function: `${moduleAddress}::candymachine::init_candy`,
+      function: moduleAddress+"::candymachine::init_candy",
       type_arguments: [],
       arguments: [
-        moduleAddress,
         "Mokshya",
         "My NFT Collection",
         "https://mokshya.io/nft/",
@@ -145,7 +144,7 @@ function App() {
   //   // build a transaction payload to be submited
   //   const payload = {
   //     type: "entry_function_payload",
-  //     function: `${moduleAddress}::candymachine::init_candy`,
+  //     function: moduleAddress+"::candymachine::init_candy",
   //     type_arguments: [],
   //     arguments: [newTask],
   //   };
@@ -193,7 +192,7 @@ function App() {
   //   setTransactionInProgress(true);
   //   const payload = {
   //     type: "entry_function_payload",
-  //     function: `${moduleAddress}::candymachine::init_candy`,
+  //     function: moduleAddress+"::candymachine::init_candy",
   //     type_arguments: [],
   //     arguments: [taskId],
   //   };

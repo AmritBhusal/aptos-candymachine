@@ -5,30 +5,30 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { AptosClient } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState, useEffect } from "react";
-import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
-import { u64 } from "@saberhq/token-utils";
-import invariant from 'tiny-invariant';
-import keccak256 from "keccak256";
-import MerkleTree from "merkletreejs";
+// import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
+// import { u64 } from "@saberhq/token-utils";
+// import invariant from 'tiny-invariant';
+// import keccak256 from "keccak256";
+// import MerkleTree from "merkletreejs";
 
 const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 const client = new AptosClient(NODE_URL);
-const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
-const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+// const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+// const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 
-const notwhitelist = new AptosAccount()
+// const notwhitelist = new AptosAccount()
 
-const to_buf = (account:Uint8Array,amount:number): Buffer=>{ 
-  return Buffer.concat([
-    account,
-    new u64(amount).toArrayLike(Buffer, "le", 8),
-  ]);
-}
+// const to_buf = (account:Uint8Array,amount:number): Buffer=>{ 
+//   return Buffer.concat([
+//     account,
+//     new u64(amount).toArrayLike(Buffer, "le", 8),
+//   ]);
+// }
 
-console.log("Alice Address: "+alice.address())
-console.log("Bob Address: "+bob.address())
+// console.log("Alice Address: "+alice.address())
+// console.log("Bob Address: "+bob.address())
 
-const moduleAddress = "0xa1e3aa355555eb0b94cb3de6c98c1a5dd33c45a3647b3b5697c21d4719339b2e";
+const moduleAddress = "0x9200aa2d63d80f481447dde94f9fcc55908fd58ac4db510e6fab37b3cec8ded2";
 
 type Task = {
   address: string;
@@ -37,15 +37,15 @@ type Task = {
   task_id: string;
 };
 
-function makeid(length: number) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+// function makeid(length: number) {
+//   var result           = '';
+//   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy';
+//   var charactersLength = characters.length;
+//   for ( var i = 0; i < length; i++ ) {
+//       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//   }
+//   return result;
+// }
 
 function App() {
   const { account, signAndSubmitTransaction } = useWallet();
@@ -106,25 +106,25 @@ function App() {
       function: `${moduleAddress}::candymachine::init_candy`,
       type_arguments: [],
       arguments: [
-        "Mokshya", // collection name
-        "This is the description of test collection", // collection description
-        "https://mokshya.io/nft/",  // collection 
-        alice.address(),
-        "1000",
-        "42",
-        1000,
-        10000,
-        "1000",
-        "2000",
-        "100",
-        [false,false,false],
-        [false,false,false,false,false],
-        0,
-        ""+makeid(5),
-    ]
-    
+        moduleAddress,
+        "my_nft_collection",
+        "My NFT Collection",
+        "https://my-nft-collection.com/",
+        "account_address_of_royalty_payee",
+        100,
+        10,
+        1644782400, 
+        1644969600,
+        100000000, 
+        200000000, 
+        10000, 
+        [true, false, false],
+        [true,true, true, true, true ],
+        100,
+        "merkle_root_in_hex",
+        "seeds_in_hex",
+      ],
     };
-
     try {
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
@@ -137,91 +137,92 @@ function App() {
       setTransactionInProgress(false);
     }
   };
-    const onTaskAdded = async () => {
-    // check for connected account
-    if (!account) return;
-    setTransactionInProgress(true);
-    // build a transaction payload to be submited
-    const payload = {
-      type: "entry_function_payload",
-      function: `${moduleAddress}::candymachine::init_candy`,
-      type_arguments: [],
-      arguments: [newTask],
-    };
+  
+  //   const onTaskAdded = async () => {
+  //   // check for connected account
+  //   if (!account) return;
+  //   setTransactionInProgress(true);
+  //   // build a transaction payload to be submited
+  //   const payload = {
+  //     type: "entry_function_payload",
+  //     function: `${moduleAddress}::candymachine::init_candy`,
+  //     type_arguments: [],
+  //     arguments: [newTask],
+  //   };
 
-    try {
-      // sign and submit transaction to chain
-      const response = await signAndSubmitTransaction(payload);
-      // wait for transaction
-      await client.waitForTransaction(response.hash);
+  //   try {
+  //     // sign and submit transaction to chain
+  //     const response = await signAndSubmitTransaction(payload);
+  //     // wait for transaction
+  //     await client.waitForTransaction(response.hash);
 
-            // hold the latest task.task_id from our local state
-      const latestId = tasks.length > 0 ? parseInt(tasks[tasks.length - 1].task_id) + 1 : 1;
+  //           // hold the latest task.task_id from our local state
+  //     const latestId = tasks.length > 0 ? parseInt(tasks[tasks.length - 1].task_id) + 1 : 1;
 
-      // build a newTaskToPush objct into our local state
-      const newTaskToPush = {
-        address: account.address,
-        completed: false,
-        content: newTask,
-        task_id: latestId + "",
-      };
+  //     // build a newTaskToPush objct into our local state
+  //     const newTaskToPush = {
+  //       address: account.address,
+  //       completed: false,
+  //       content: newTask,
+  //       task_id: latestId + "",
+  //     };
 
-      // Create a new array based on current state:
-      let newTasks = [...tasks];
+  //     // Create a new array based on current state:
+  //     let newTasks = [...tasks];
 
-      // Add item to it
-      newTasks.unshift(newTaskToPush);
+  //     // Add item to it
+  //     newTasks.unshift(newTaskToPush);
 
-      // Set state
-      setTasks(newTasks);
-            // clear input text
-      setNewTask("");
-    } catch (error: any) {
-      console.log("error", error);
-    } finally {
-      setTransactionInProgress(false);
-    }
-  };
+  //     // Set state
+  //     setTasks(newTasks);
+  //           // clear input text
+  //     setNewTask("");
+  //   } catch (error: any) {
+  //     console.log("error", error);
+  //   } finally {
+  //     setTransactionInProgress(false);
+  //   }
+  // };
 
-  const onCheckboxChange = async (
-    event: CheckboxChangeEvent,
-    taskId: string
-  ) => {
-    if (!account) return;
-    if (!event.target.checked) return;
-    setTransactionInProgress(true);
-    const payload = {
-      type: "entry_function_payload",
-      function: `${moduleAddress}::candymachine::init_candy`,
-      type_arguments: [],
-      arguments: [taskId],
-    };
+  // const onCheckboxChange = async (
+  //   event: CheckboxChangeEvent,
+  //   taskId: string
+  // ) => {
+  //   if (!account) return;
+  //   if (!event.target.checked) return;
+  //   setTransactionInProgress(true);
+  //   const payload = {
+  //     type: "entry_function_payload",
+  //     function: `${moduleAddress}::candymachine::init_candy`,
+  //     type_arguments: [],
+  //     arguments: [taskId],
+  //   };
 
-    try {
-      // sign and submit transaction to chain
-      const response = await signAndSubmitTransaction(payload);
-      // wait for transaction
-      await client.waitForTransaction(response.hash);
+  //   try {
+  //     // sign and submit transaction to chain
+  //     const response = await signAndSubmitTransaction(payload);
+  //     // wait for transaction
+  //     await client.waitForTransaction(response.hash);
 
-      setTasks((prevState) => {
-        const newState = prevState.map((obj) => {
-          // if task_id equals the checked taskId, update completed property
-          if (obj.task_id === taskId) {
-            return { ...obj, completed: true };
-          }
+  //     setTasks((prevState) => {
+  //       const newState = prevState.map((obj) => {
+  //         // if task_id equals the checked taskId, update completed property
+  //         if (obj.task_id === taskId) {
+  //           return { ...obj, completed: true };
+  //         }
 
-          // otherwise return object as is
-          return obj;
-        });
+  //         // otherwise return object as is
+  //         return obj;
+  //       });
 
-        return newState;
-      });
-    } catch (error: any) {
-      console.log("error", error);
-    } finally {
-      setTransactionInProgress(false);
-    }
-  };
+  //       return newState;
+  //     });
+  //   } catch (error: any) {
+  //     console.log("error", error);
+  //   } finally {
+  //     setTransactionInProgress(false);
+  //   }
+  // };
 
 
   return (
@@ -262,9 +263,9 @@ function App() {
                   size="large"
                   value={newTask}
                 />
-                <Button onClick={onTaskAdded} type="primary" style={{ height: "40px", backgroundColor: "#3f67ff" }}>
+                {/* <Button onClick={onTaskAdded} type="primary" style={{ height: "40px", backgroundColor: "#3f67ff" }}>
                   Add
-                </Button>
+                </Button> */}
               </Input.Group>
             </Col>
             <Col span={8} offset={8}>
@@ -275,15 +276,15 @@ function App() {
                   dataSource={tasks}
                   renderItem={(task: Task) => (
                     <List.Item
-                      actions={[
-                        <div>
-                          {task.completed ? (
-                            <Checkbox defaultChecked={true} disabled />
-                          ) : (
-                            <Checkbox onChange={(event) => onCheckboxChange(event, task.task_id)} />
-                          )}
-                        </div>,
-                      ]}
+                      // actions={[
+                      //   <div>
+                      //     {task.completed ? (
+                      //       <Checkbox defaultChecked={true} disabled />
+                      //     ) : (
+                      //       <Checkbox onChange={(event) => onCheckboxChange(event, task.task_id)} />
+                      //     )}
+                      //   </div>,
+                      // ]}
                     >
                       <List.Item.Meta
                         title={task.task_id}

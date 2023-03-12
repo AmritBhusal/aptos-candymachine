@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "@aptos-labs/wallet-adapter-ant-design": "^0.1.0",
-    "@aptos-labs/wallet-adapter-react": "^0.2.2",
+    "@aptos-labs/wallet-adapter-react": "^0.2.4",
+    "@martiandao/aptos-web3.js": "^3.0.7",
+    "@martianwallet/aptos-wallet-adapter": "^0.0.3",
     "@saberhq/token-utils": "^1.14.11",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -47,5 +49,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

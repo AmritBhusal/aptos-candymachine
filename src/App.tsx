@@ -137,6 +137,11 @@ function App() {
     }
   };
   
+  // let txnRequest = await client.generateTransaction(alice.address(), create_candy_machine);
+  //       let bcsTxn = AptosClient.generateBCSTransaction(alice, txnRequest);
+  //       let transactionRes = await client.submitSignedBCSTransaction(bcsTxn);
+  //       console.log("Candy Machine created: "+transactionRes.hash)
+
   //   const onTaskAdded = async () => {
   //   // check for connected account
   //   if (!account) return;

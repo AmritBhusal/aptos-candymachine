@@ -1,5 +1,5 @@
 import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from "antd";
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
+// import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { AptosClient } from "aptos";
@@ -99,8 +99,10 @@ function App() {
   
  
   const addNew = async () => {
+    console.log("hello:"+alice.address())
     if (!account) return [];
     setTransactionInProgress(true);
+    console.log("working:"+alice.address())
     const payload = {
       type: "entry_function_payload",
       function: moduleAddress+"::candymachine::init_candy",
@@ -125,14 +127,17 @@ function App() {
       ],
     };
     try {
+      console.log("hello amr:"+alice.address())
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
       // wait for transaction
       await client.waitForTransaction(response.hash);
       setAccountHasList(true);
     } catch (error: any) {
+      console.log("candymachine:"+alice.address())
       setAccountHasList(false);
     } finally {
+      console.log("hello candymachine:"+alice.address())
       setTransactionInProgress(false);
     }
   };

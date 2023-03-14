@@ -11,8 +11,9 @@ import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
 // import keccak256 from "keccak256";
 // import MerkleTree from "merkletreejs";
 
-const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
-const client = new AptosClient(NODE_URL);
+// const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
+// const client = new AptosClient(NODE_URL);
+const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
 const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 // const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 

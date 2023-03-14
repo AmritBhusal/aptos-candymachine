@@ -30,7 +30,8 @@ console.log("Alice Address: "+alice.address())
 // console.log("Bob Address: "+bob.address())
 
 const moduleAddress = "0x8035a63a18798115679466eef240aca66364707044f0ac7484e4c462c8310ae9";
-
+//0x4410ccc360708d124e0c2715a535d3d74030e30ae6f50493798c22fccef7cb92
+//0x8035a63a18798115679466eef240aca66364707044f0ac7484e4c462c8310ae9
 type Task = {
   address: string;
   completed: boolean;

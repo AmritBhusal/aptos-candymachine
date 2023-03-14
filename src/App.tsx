@@ -50,7 +50,7 @@ type Task = {
 // }
 
 function App() {
-  const { account, signAndSubmitTransaction } = useWallet();
+  const {account, signAndSubmitTransaction } = useWallet();
   const [accountHasList, setAccountHasList] = useState<boolean>(false);
   const [transactionInProgress, setTransactionInProgress] = useState<boolean>(false);
   const [newTask, setNewTask] = useState<string>("");
@@ -109,23 +109,23 @@ function App() {
       type: "entry_function_payload",
       function: moduleAddress+"::candymachine::init_candy",
       type_arguments: [],
-      arguments: [
-        "Mokshya",
-        "My NFT Collection",
-        "https://mokshya.io/nft/",
-        alice.address(),
-        "1000",
-        "42",
-        1644782400, 
-        1644969600,
-        "1000",
-        "2000",
-        "100",
-        [true, false, false],
-        [true,true, true, true, true ],
-        100,
-        "merkle_root_in_hex",
-        "seeds_in_hex",
+      arguments: [ 
+        "Mokshya", //collection_name
+        "My NFT Collection", //collection_description
+        "https://mokshya.io/nft/", //baseuri
+        alice.address(), //royalty_payee_address
+        "1000", //royalty_points_denominator
+        "42", // royalty_points_numerator
+        1644782400, //presale_mint_time
+        1644969600, //public_sale_mint_time
+        "1000", //presale_mint_price
+        "2000", // public_sale_mint_price
+        "100", //total_supply
+        [true, false, false], //collection_mutate_setting
+        [true,true, true, true, true ], //token_mutate_setting
+        100, //public_mint_limit
+        "merkle_root_in_hex", //merkle_root
+        "seeds_in_hex", //seeds
       ],
     };
     try {

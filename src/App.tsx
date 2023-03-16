@@ -13,7 +13,8 @@ import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
 
 // const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 // const client = new AptosClient(NODE_URL);
-const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
+// const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1');
+const client = new AptosClient('https://fullnode.testnet.aptoslabs.com/v1');
 const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 // const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 
@@ -127,9 +128,10 @@ function App() {
         "merkle_root_in_hex", //merkle_root
         "seeds_in_hex", //seeds
       ],
+
     };
     try {
-      console.log("hello amr:"+alice.address())
+      console.log("hello amr:"+moduleAddress)
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
       // wait for transaction

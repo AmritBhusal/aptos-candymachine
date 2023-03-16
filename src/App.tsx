@@ -114,11 +114,11 @@ function App() {
         "Mokshya", //collection_name
         "My NFT Collection", //collection_description
         "https://mokshya.io/nft/", //baseuri
-        alice.address(), //royalty_payee_address
+        "0x147e4d3a5b10eaed2a93536e284c23096dfcea9ac61f0a8420e5d01fbd8f0ea8", //royalty_payee_address
         "1000", //royalty_points_denominator
         "42", // royalty_points_numerator
-        1644782400, //presale_mint_time
-        1644969600, //public_sale_mint_time
+        1679128905, //presale_mint_time
+        1679132505, //public_sale_mint_time
         "1000", //presale_mint_price
         "2000", // public_sale_mint_price
         "100", //total_supply

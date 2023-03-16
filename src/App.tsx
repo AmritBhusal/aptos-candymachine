@@ -120,7 +120,7 @@ function App() {
         1679128905, //presale_mint_time
         1679132505, //public_sale_mint_time
         "1000", //presale_mint_price
-        "2000", // public_sale_mint_price
+        "2000", // public_sale_mint_price 
         "100", //total_supply
         [true, false, false], //collection_mutate_setting
         [true,true, true, true, true ], //token_mutate_setting

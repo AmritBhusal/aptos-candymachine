@@ -1,12 +1,13 @@
 import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from "antd";
-// import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { AptosClient } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState, useEffect } from "react";
+import { Network, Provider } from "aptos";
 import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
-// import { u64 } from "@saberhq/token-utils";
+import { u64 } from "@saberhq/token-utils";
 // import invariant from 'tiny-invariant';
 // import keccak256 from "keccak256";
 // import MerkleTree from "merkletreejs";
@@ -34,10 +35,23 @@ const moduleAddress = "0x8035a63a18798115679466eef240aca66364707044f0ac7484e4c46
 //0x4410ccc360708d124e0c2715a535d3d74030e30ae6f50493798c22fccef7cb92
 //0x8035a63a18798115679466eef240aca66364707044f0ac7484e4c462c8310ae9
 type Task = {
-  address: string;
-  completed: boolean;
-  content: string;
-  task_id: string;
+  collection_name: String;
+  collection_description: String;
+  baseuri: String;
+  royalty_payee_address:string;
+  royalty_points_denominator: String;
+  royalty_points_numerator: String;
+  presale_mint_time: number;
+  public_sale_mint_time: number;
+  presale_mint_price: String;
+  public_sale_mint_price: String;
+  paused: boolean;
+  total_supply: String;
+  minted: boolean[];
+  token_mutate_setting:boolean[];
+  candies:string;
+  public_mint_limit: number;
+  merkle_root: string;
 };
 
 // function makeid(length: number) {
@@ -72,7 +86,7 @@ function App() {
     try {
       const CandyMachineResource = await client.getAccountResource(
         account.address,
-        moduleAddress+":candymachine::CandyMachine"
+        moduleAddress+":candymachine::init_candy"
         
       );
       setAccountHasList(true);
@@ -117,8 +131,8 @@ function App() {
         "0x147e4d3a5b10eaed2a93536e284c23096dfcea9ac61f0a8420e5d01fbd8f0ea8", //royalty_payee_address
         "1000", //royalty_points_denominator
         "42", // royalty_points_numerator
-        1679128905, //presale_mint_time
-        1679132505, //public_sale_mint_time
+        1679734931, //presale_mint_time
+        1679821331, //public_sale_mint_time
         "1000", //presale_mint_price
         "2000", // public_sale_mint_price 
         "100", //total_supply
@@ -131,17 +145,14 @@ function App() {
 
     };
     try {
-      console.log("hello amr:"+moduleAddress)
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
       // wait for transaction
       await client.waitForTransaction(response.hash);
       setAccountHasList(true);
     } catch (error: any) {
-      console.log("candymachine:"+alice.address())
       setAccountHasList(false);
     } finally {
-      console.log("hello candymachine:"+alice.address())
       setTransactionInProgress(false);
     }
   };
@@ -151,91 +162,104 @@ function App() {
   //       let transactionRes = await client.submitSignedBCSTransaction(bcsTxn);
   //       console.log("Candy Machine created: "+transactionRes.hash)
 
-  //   const onTaskAdded = async () => {
-  //   // check for connected account
-  //   if (!account) return;
-  //   setTransactionInProgress(true);
-  //   // build a transaction payload to be submited
-  //   const payload = {
-  //     type: "entry_function_payload",
-  //     function: moduleAddress+"::candymachine::init_candy",
-  //     type_arguments: [],
-  //     arguments: [newTask],
-  //   };
+    const onTaskAdded = async () => {
+    // check for connected account
+    if (!account) return;
+    setTransactionInProgress(true);
+    // build a transaction payload to be submited
+    const payload = {
+      type: "entry_function_payload",
+      function: moduleAddress+"::candymachine::init_candy",
+      type_arguments: [],
+      arguments: [newTask],
+    };
 
-  //   try {
-  //     // sign and submit transaction to chain
-  //     const response = await signAndSubmitTransaction(payload);
-  //     // wait for transaction
-  //     await client.waitForTransaction(response.hash);
+    try {
+      // sign and submit transaction to chain
+      const response = await signAndSubmitTransaction(payload);
+      // wait for transaction
+      await client.waitForTransaction(response.hash);
 
-  //           // hold the latest task.task_id from our local state
-  //     const latestId = tasks.length > 0 ? parseInt(tasks[tasks.length - 1].task_id) + 1 : 1;
+      // hold the latest task.merkle_root from our local state
+      const latestId = tasks.length > 0 ? parseInt(tasks[tasks.length - 1].merkle_root) + 1 : 1;
 
-  //     // build a newTaskToPush objct into our local state
-  //     const newTaskToPush = {
-  //       address: account.address,
-  //       completed: false,
-  //       content: newTask,
-  //       task_id: latestId + "",
-  //     };
+      // build a newTaskToPush objct into our local state
+      const newTaskToPush = {
+        collection_name: newTask,
+        collection_description: "My NFT Collection",
+        baseuri: "https://mokshya.io/nft/",
+        royalty_payee_address: account.address,
+        royalty_points_denominator: "1000",
+        royalty_points_numerator: "42",
+        presale_mint_time: 1679734931,
+        public_sale_mint_time: 1679821331,
+        presale_mint_price: "1000",
+        public_sale_mint_price: "2000",
+        paused: false,
+        total_supply:"100" ,
+        minted: [true, false, false],
+        token_mutate_setting: [true,true, true, true, true ],
+        candies: "candies_in_hex",
+        public_mint_limit: 100,
+        merkle_root: "merkle_root_in_hex",
+      };
 
-  //     // Create a new array based on current state:
-  //     let newTasks = [...tasks];
+      // Create a new array based on current state:
+      let newTasks = [...tasks];
 
-  //     // Add item to it
-  //     newTasks.unshift(newTaskToPush);
+      // Add item to it
+      newTasks.unshift(newTaskToPush);
 
-  //     // Set state
-  //     setTasks(newTasks);
-  //           // clear input text
-  //     setNewTask("");
-  //   } catch (error: any) {
-  //     console.log("error", error);
-  //   } finally {
-  //     setTransactionInProgress(false);
-  //   }
-  // };
+      // Set state
+      setTasks(newTasks);
+      // clear input text
+      setNewTask("");
+    } catch (error: any) {
+      console.log("error", error);
+    } finally {
+      setTransactionInProgress(false);
+    }
+  };
 
-  // const onCheckboxChange = async (
-  //   event: CheckboxChangeEvent,
-  //   taskId: string
-  // ) => {
-  //   if (!account) return;
-  //   if (!event.target.checked) return;
-  //   setTransactionInProgress(true);
-  //   const payload = {
-  //     type: "entry_function_payload",
-  //     function: moduleAddress+"::candymachine::init_candy",
-  //     type_arguments: [],
-  //     arguments: [taskId],
-  //   };
+  const onCheckboxChange = async (
+    event: CheckboxChangeEvent,
+    taskId: string
+  ) => {
+    if (!account) return;
+    if (!event.target.checked) return;
+    setTransactionInProgress(true);
+    const payload = {
+      type: "entry_function_payload",
+      function: moduleAddress+"::candymachine::init_candy",
+      type_arguments: [],
+      arguments: [taskId],
+    };
 
-  //   try {
-  //     // sign and submit transaction to chain
-  //     const response = await signAndSubmitTransaction(payload);
-  //     // wait for transaction
-  //     await client.waitForTransaction(response.hash);
+    try {
+      // sign and submit transaction to chain
+      const response = await signAndSubmitTransaction(payload);
+      // wait for transaction
+      await client.waitForTransaction(response.hash);
 
-  //     setTasks((prevState) => {
-  //       const newState = prevState.map((obj) => {
-  //         // if task_id equals the checked taskId, update completed property
-  //         if (obj.task_id === taskId) {
-  //           return { ...obj, completed: true };
-  //         }
+      setTasks((prevState) => {
+        const newState = prevState.map((obj) => {
+          // if merkle_root equals the checked taskId, update completed property
+          if (obj.merkle_root === taskId) {
+            return { ...obj, completed: true };
+          }
 
-  //         // otherwise return object as is
-  //         return obj;
-  //       });
+          // otherwise return object as is
+          return obj;
+        });
 
-  //       return newState;
-  //     });
-  //   } catch (error: any) {
-  //     console.log("error", error);
-  //   } finally {
-  //     setTransactionInProgress(false);
-  //   }
-  // };
+        return newState;
+      });
+    } catch (error: any) {
+      console.log("error", error);
+    } finally {
+      setTransactionInProgress(false);
+    }
+  };
 
 
   return (
@@ -276,9 +300,9 @@ function App() {
                   size="large"
                   value={newTask}
                 />
-                {/* <Button onClick={onTaskAdded} type="primary" style={{ height: "40px", backgroundColor: "#3f67ff" }}>
+                <Button onClick={onTaskAdded} type="primary" style={{ height: "40px", backgroundColor: "#3f67ff" }}>
                   Add
-                </Button> */}
+                </Button>
               </Input.Group>
             </Col>
             <Col span={8} offset={8}>
@@ -289,23 +313,23 @@ function App() {
                   dataSource={tasks}
                   renderItem={(task: Task) => (
                     <List.Item
-                      // actions={[
-                      //   <div>
-                      //     {task.completed ? (
-                      //       <Checkbox defaultChecked={true} disabled />
-                      //     ) : (
-                      //       <Checkbox onChange={(event) => onCheckboxChange(event, task.task_id)} />
-                      //     )}
-                      //   </div>,
-                      // ]}
+                      actions={[
+                        <div>
+                          {task.minted ? (
+                            <Checkbox defaultChecked={true} disabled />
+                          ) : (
+                            <Checkbox onChange={(event) => onCheckboxChange(event, task.merkle_root)} />
+                          )}
+                        </div>,
+                      ]}
                     >
                       <List.Item.Meta
-                        title={task.task_id}
+                        title={task.merkle_root}
                         description={
                           <a
-                            href={`https://explorer.aptoslabs.com/account/${task.address}/`}
+                            href={`https://explorer.aptoslabs.com/account/${task.royalty_payee_address}/`}
                             target="_blank"
-                          >{`${task.address.slice(0, 6)}...${task.address.slice(-5)}`}</a>
+                          >{`${task.royalty_payee_address.slice(0, 6)}...${task.royalty_payee_address.slice(-5)}`}</a>
                         }
                       />
                     </List.Item>
@@ -321,3 +345,6 @@ function App() {
 }
 
 export default App;
+
+
+// diamond harsh anger chair divorce rude leopard alley disorder despair erode food

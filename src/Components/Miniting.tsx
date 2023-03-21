@@ -1,19 +1,19 @@
-import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from "antd";
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { Layout, Row, Col, Button, Input } from "antd";
+// import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import { AptosClient } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState, useEffect } from "react";
 import { Network, Provider } from "aptos";
-import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
-import { u64 } from "@saberhq/token-utils";
+// import { HexString, AptosAccount, FaucetClient,BCS} from "aptos";
+// import { u64 } from "@saberhq/token-utils";
 
 
 const client = new AptosClient('https://fullnode.testnet.aptoslabs.com/v1');
 
-const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
-const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+// const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
+// const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 
 export const moduleAddress = "0x8035a63a18798115679466eef240aca66364707044f0ac7484e4c462c8310ae9";
 
@@ -38,7 +38,7 @@ function Mint() {
       );
       setAccountHasList(true);
       const tableHandle = (CandyMachineResource as any).data.tasks.handle;
-      const taskCounter = (CandyMachineResource as any).data.task_counter;
+      // const taskCounter = (CandyMachineResource as any).data.task_counter;
       
     } catch (e: any) {
       setAccountHasList(false);

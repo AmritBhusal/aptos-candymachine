@@ -10,14 +10,14 @@ import { Network, Provider } from "aptos";
 // import { u64 } from "@saberhq/token-utils";
 
 
-const client = new AptosClient('https://fullnode.testnet.aptoslabs.com/v1');
+const provider = new AptosClient('https://fullnode.testnet.aptoslabs.com/v1');
 
 // const alice = new AptosAccount(HexString.ensure("0x1111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 // const bob = new AptosAccount(HexString.ensure("0x2111111111111111111111111111111111111111111111111111111111111111").toUint8Array());
 
 export const moduleAddress = "0x8035a63a18798115679466eef240aca66364707044f0ac7484e4c462c8310ae9";
 
-export const provider = new Provider(Network.DEVNET);
+// export const provider = new Provider(Network.TESTNET);
 
 function Mint() {
   const {account, signAndSubmitTransaction } = useWallet();
@@ -31,9 +31,9 @@ function Mint() {
   const fetchList = async () => {
     if (!account) return [];
     try {
-      const CandyMachineResource = await client.getAccountResource(
+      const CandyMachineResource = await provider.getAccountResource(
         account.address,
-        moduleAddress+"::candymachine::mint"
+        moduleAddress+"::candymachine::mint_script"
         
       );
       setAccountHasList(true);
@@ -53,11 +53,10 @@ function Mint() {
     // build a transaction payload to be submited
     const payload = {
       type: "entry_function_payload",
-      function: `${moduleAddress}::candymachine::mint`,
+      function: `${moduleAddress}::candymachine::mint_script`,
       type_arguments: [],
       arguments: [
         "0x147e4d3a5b10eaed2a93536e284c23096dfcea9ac61f0a8420e5d01fbd8f0ea8",
-        100,
       ],
     };
     try {
@@ -87,8 +86,6 @@ function Mint() {
       </Row>
     </Layout>
           <Row gutter={[0, 32]} style={{ marginTop: "2rem" }}>
-          <input placeholder="Candymachine Address" />
-          <input placeholder="Price" />
             <Col span={8} offset={8}>
               <Button
                 disabled={!account}
